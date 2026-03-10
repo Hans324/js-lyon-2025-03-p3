@@ -3,7 +3,7 @@ import "./QuiSommesNous.css";
 function QuiSommesNous() {
   return (
     <section className="text">
-      <h2>Qui sommes-nous ?</h2>
+      <h1>Qui sommes-nous ?</h1>
       <p>
         Bienvenue sur <strong>ExternalShip</strong>, la plateforme de référence
         pour la location de vaisseaux spatiaux !

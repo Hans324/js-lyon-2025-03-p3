@@ -21,7 +21,9 @@ function App() {
   return (
     <>
       <Header />
+
       <Outlet context={{ auth, setAuth }} />
+
       <Footer />
     </>
   );

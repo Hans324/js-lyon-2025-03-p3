@@ -54,20 +54,24 @@ export default function LocationReservation() {
   console.log(ship);
 
   if (!isAuth) return <NotAuth />;
-  if (!ship) return null;
+  if (!ship) return <p aria-live="polite">Chargement des informations...</p>;
 
   return (
     <section className="reservation-recap" key={ship.id}>
       {availability > 0 ? (
         <>
-          <h2>Vous allez louer le vaisseau suivant :</h2>
+          <h1>Vous allez louer le vaisseau suivant :</h1>
           <ShipCard name={ship.name} image={ship.image} id={ship.id} />
           <CheckoutButton shipId={ship.id} />
         </>
       ) : (
-        <section className="not-available-wrapper">
+        <section
+          className="not-available-wrapper"
+          role="alert"
+          aria-live="polite"
+        >
           <div className="not-available">
-            <h2>Ce vaisseau n'est pas disponible pour le moment.</h2>
+            <h1>Ce vaisseau n'est pas disponible pour le moment.</h1>
           </div>
           <Link to="/ships" className="return-to-ship-button">
             {" "}

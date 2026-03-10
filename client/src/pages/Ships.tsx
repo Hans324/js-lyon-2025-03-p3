@@ -20,6 +20,12 @@ function Ships() {
   return (
     <>
       <section className="shipsPage-wrapper">
+        <h1>Catalogue de vaisseaux spatiaux</h1>
+        <p className="ships-description">
+          Découvrez notre catalogue de vaisseaux à la location. Filtrez selon le
+          type, la capacité, les services et les dates de voyage.
+        </p>
+
         <Filter />
         <div className="shipCards-wrapper">
           {ships.map((ship) => (

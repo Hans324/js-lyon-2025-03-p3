@@ -13,3 +13,12 @@
   width: 100%;
   text-align: center;
 }
+.addShip-header {
+  text-align: center;
+  padding: 2rem;
+}
+
+.addShip-header p {
+  max-width: 600px;
+  margin: auto;
+}

@@ -3,7 +3,7 @@ import Stripe from "stripe";
 import rentRepository from "../rent/rentRepository";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
-  apiVersion: "2025-06-30.basil",
+  apiVersion: "2025-08-27.basil",
 });
 
 const stripeWebhook = async (req: Request, res: Response): Promise<void> => {

@@ -72,6 +72,7 @@ function LoginForm() {
             name="password"
             placeholder="Votre mot de passe"
             required
+            minLength={8}
           />
         </div>
         <button type="submit">Login</button>

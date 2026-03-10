@@ -21,12 +21,20 @@ function Home() {
 
   return (
     <section>
-      {ships.map((ship) => (
+      <section className="home-intro">
+        <p>
+          Application de location de vaisseaux pour voyages interstellaires.
+          Choisissez votre modèle et réservez facilement en ligne
+        </p>
+      </section>
+      {ships.map((ship, index) => (
         <figure key={ship.id} className="ship-highlight">
           <img
             src={`http://localhost:3310${ship.image}`}
-            alt="exodius"
+            alt={ship.name}
             className="ship-img"
+            // lazy loading sauf pour la première image
+            loading={index === 0 ? "eager" : "lazy"}
           />
           <figcaption className="ship-txt">
             <h2>{ship.name}</h2>

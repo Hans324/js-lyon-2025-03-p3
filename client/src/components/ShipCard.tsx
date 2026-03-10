@@ -58,7 +58,7 @@ function ShipCard({ name, image, id }: ShipProps) {
           </div>
         </div>
       </section>
-      <img src={`${baseURL}${image}`} alt={name} />
+      <img src={`${baseURL}${image}`} alt={name} loading="lazy" />
       <div className="quantity-wrapper">
         <p className="ship-quantity">Quantité disponible : {availability}</p>
       </div>

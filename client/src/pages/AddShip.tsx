@@ -4,7 +4,7 @@ import "./AddShip.css";
 import NotAuth from "../components/NotAuth";
 
 function AddShip() {
-  const [isAuth, setIsAuth] = useState(Boolean);
+  const [isAuth, setIsAuth] = useState(false);
   const baseURL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
@@ -26,11 +26,18 @@ function AddShip() {
 
     checkAuth();
   }, []);
+
   return isAuth ? (
-    <section className="addShip-wrapper">
-      <h2 className="addShip-title">Ajoutez votre vaisseau spatial</h2>
-      <ShipForm />
-    </section>
+    <>
+      <section className="addShip-header">
+        <h1>Ajout de vaisseaux spatiaux</h1>
+        <p>Ajoutez un nouveau vaisseau à notre catalogue de location spatial</p>
+      </section>
+      <section className="addShip-wrapper">
+        <h2 className="addShip-title">Ajoutez votre vaisseau spatial</h2>
+        <ShipForm />
+      </section>
+    </>
   ) : (
     <NotAuth />
   );

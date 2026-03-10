@@ -13,7 +13,7 @@ router.get("/api/ships", shipActions.browse);
 router.get("/api/ships/:id", shipActions.read);
 router.get("/api/available/ship/:id", shipActions.shipAvailable);
 router.post("/api/ships", verifyToken, upload.single("image"), shipActions.add);
-router.delete("/api/ships/:id", shipActions.remove);
+router.delete("/api/ships/:id", verifyToken, shipActions.remove);
 
 /* ************************************************************************* */
 
@@ -25,8 +25,8 @@ router.post("/api/logout", authActions.logout);
 
 import userActions from "./modules/user/userActions";
 
-router.get("/api/users", userActions.browse);
-router.get("/api/users/:id", userActions.read);
+router.get("/api/users", verifyToken, userActions.browse);
+router.get("/api/users/:id", verifyToken, userActions.read);
 router.post("/api/users", userActions.hashPassword, userActions.add);
 router.post("/api/rent", verifyToken, userActions.rentShip);
 router.get("/api/rent/:id", userActions.readRent);

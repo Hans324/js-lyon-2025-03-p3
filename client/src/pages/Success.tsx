@@ -7,7 +7,7 @@ function Success() {
     <>
       <Header />
       <section className="success-container">
-        <h2>🎉 Paiement réussi !</h2>
+        <h1>🎉 Paiement réussi !</h1>
         <p>Merci pour votre réservation de vaisseau. 🚀</p>
         <p>Vous recevrez une confirmation par email.</p>
 

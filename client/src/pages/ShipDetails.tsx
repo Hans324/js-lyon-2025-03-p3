@@ -101,7 +101,12 @@ function ShipDetails() {
             odit eveniet est nesciunt, voluptates quibusdam voluptatibus
             eligendi asperiores a aperiam dolor!
           </p>
-          <img className="details-img-right" src={livingroom} alt="details" />
+          <img
+            className="details-img-right"
+            src={livingroom}
+            alt="details"
+            loading="lazy"
+          />
         </section>
       </section>
       {/* section 2 */}
@@ -112,7 +117,12 @@ function ShipDetails() {
             <h4 className="ow-h4 two">...Depuis son lit</h4>
           </section>
           <section className="overview-img">
-            <img className="details-img-left" src={bedroom} alt="details" />
+            <img
+              className="details-img-left"
+              src={bedroom}
+              alt="details"
+              loading="lazy"
+            />
           </section>
         </section>
         <section className="section-details-two">
@@ -146,6 +156,7 @@ function ShipDetails() {
               src={stewardess}
               alt="stewardess"
               className="details-img-right"
+              loading="lazy"
             />
             <p className="text-details-four">
               Lorem ipsum dolor sit amet. Aut perferendis esse non laboriosam

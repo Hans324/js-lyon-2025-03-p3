@@ -39,3 +39,20 @@
   gap: 4rem;
   padding: 0 2rem 0 2rem;
 }
+
+.home-intro {
+  text-align: center;
+  padding: 2rem;
+  position: absolute;
+  top: 180px;
+  width: 100%;
+  z-index: 10;
+}
+
+.home-intro p {
+  max-width: 600px;
+  margin: auto;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--text-color);
+}

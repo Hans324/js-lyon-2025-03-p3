@@ -31,7 +31,7 @@ export default function DeleteShip() {
     // Optionnel : rafraîchir la liste après suppression
     setShips((prev) => prev.filter((ship) => ship.id !== Number(shipId)));
   };
-  const [isAuth, setIsAuth] = useState(Boolean);
+  const [isAuth, setIsAuth] = useState<boolean | null>(null);
   useEffect(() => {
     const checkAuth = async () => {
       try {
@@ -51,37 +51,54 @@ export default function DeleteShip() {
 
     checkAuth();
   }, []);
-
+  if (isAuth === null) return <p>Chargement...</p>;
   return isAuth ? (
-    <section id="containerDS">
-      <h1 id="title">SUPPRIMER UN VAISSEAU SPATIAL</h1>
-      <form onSubmit={deleteShipBtn}>
-        <div id="divDS">
-          <label htmlFor="deleteShip" id="labelDS">
-            Choissisez le vaisseau à supprimer :{" "}
-          </label>
-          <select name="ships" id="deleteShip">
-            {ships.map((ship) => (
-              <option key={ship.id} value={ship.id}>
-                {ship.id}.{ship.name}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div id="disclaimerDS">
-          <h2 id="subTitleH2">
-            ATTENTION: LA SUPPRESSION D'UN VAISSEAU EST IRRÉVESIBLE.
-          </h2>
-          <p>
-            Veuillez bien contrôler que vous avez choisi le bon vaisseau avant
-            de cliquer sur le bouton "SUPPRIMER"{" "}
-          </p>
-        </div>
-        <button type="submit" id="buttonDS" disabled={ships.length === 0}>
-          SUPPRIMER LE VAISSEAU
-        </button>
-      </form>
-    </section>
+    <>
+      <section className="deleteShip-header">
+        <h1>Suppression de vaisseaux</h1>
+        <p>
+          Connectez-vous pour supprimer un vaisseau du catalogue de location.
+        </p>
+      </section>
+      <section id="containerDS">
+        <h1 id="title">SUPPRIMER UN VAISSEAU SPATIAL</h1>
+        <form onSubmit={deleteShipBtn}>
+          <div id="divDS">
+            <label htmlFor="deleteShip" id="labelDS">
+              Choissisez le vaisseau à supprimer :{" "}
+            </label>
+            <select
+              name="ships"
+              id="deleteShip"
+              aria-label="Sélectionner un vaisseau à supprimer"
+            >
+              {ships.map((ship) => (
+                <option key={ship.id} value={ship.id}>
+                  {ship.id}.{ship.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div id="disclaimerDS">
+            <h2 id="subTitleH2">
+              ATTENTION: LA SUPPRESSION D'UN VAISSEAU EST IRRÉVESIBLE.
+            </h2>
+            <p>
+              Veuillez bien contrôler que vous avez choisi le bon vaisseau avant
+              de cliquer sur le bouton "SUPPRIMER"{" "}
+            </p>
+          </div>
+          <button
+            type="submit"
+            id="buttonDS"
+            disabled={ships.length === 0}
+            aria-disabled={ships.length === 0}
+          >
+            SUPPRIMER LE VAISSEAU
+          </button>
+        </form>
+      </section>
+    </>
   ) : (
     <NotAuth />
   );

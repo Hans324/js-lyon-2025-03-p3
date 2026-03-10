@@ -35,7 +35,7 @@ function Filter() {
       </section>
 
       <section id="group-services">
-        <h2>Services</h2>
+        <h1>Services</h1>
         <section id="btn-group-services">
           <button type="button" className="btn-service">
             Premium

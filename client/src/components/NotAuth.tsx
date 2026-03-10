@@ -6,7 +6,7 @@ import "../components/CreateUser.css";
 function NotAuth() {
   return (
     <section className="connection-register">
-      <h2>Veuillez vous connecter pour acceder à cette page</h2>
+      <h2>Connectez-vous</h2>
       <LoginForm />
       <h2>Ou bien créez un compte</h2>
       <CreateUser />

@@ -2,9 +2,11 @@
 
 import cookieParser from "cookie-parser";
 import express from "express";
+import helmet from "helmet";
 
 const app = express();
 
+app.use(helmet());
 app.post("/webhook", express.raw({ type: "application/json" }), stripeWebhook);
 
 // Configure it

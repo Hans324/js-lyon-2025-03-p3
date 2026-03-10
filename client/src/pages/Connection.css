@@ -6,6 +6,12 @@
   justify-content: center;
   gap: 3rem;
 }
+.connection-description {
+  text-align: center;
+  max-width: 500px;
+  font-size: 1rem;
+}
+
 .credentials-input {
   display: flex;
   flex-direction: column;
