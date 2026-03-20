@@ -1,48 +1,73 @@
 import express from "express";
 
+import { validateCreateUser } from "./middlewares/validation";
+import verifyToken from "./middlewares/verifiyToken";
+
+import stripeWebhook from "./modules/stripe/stripeWebhook";
+
+import AuthController from "./Controller/AuthController";
+import RentController from "./Controller/RentController";
+import ShipController from "./Controller/ShipController";
+import UserController from "./Controller/UserController";
+
 const router = express.Router();
 
 /* ************************************************************************* */
-// Define Your API Routes Here
+/* Ship routes */
 /* ************************************************************************* */
 
-// Define item-related routes
-import shipActions, { upload } from "./modules/ship/shipActions";
-
-router.get("/api/ships", shipActions.browse);
-router.get("/api/ships/:id", shipActions.read);
-router.get("/api/available/ship/:id", shipActions.shipAvailable);
-router.post("/api/ships", verifyToken, upload.single("image"), shipActions.add);
-router.delete("/api/ships/:id", verifyToken, shipActions.remove);
-
+/* ************************************************************************* */
+/* Auth routes */
 /* ************************************************************************* */
 
-import authActions from "./modules/auth/authActions";
-
-router.post("/api/login", authActions.login);
-router.post("/api/logout", authActions.logout);
-// router.post("/api/auth", verifyToken, userActions.add);
-
-import userActions from "./modules/user/userActions";
-
-router.get("/api/users", verifyToken, userActions.browse);
-router.get("/api/users/:id", verifyToken, userActions.read);
-router.post("/api/users", userActions.hashPassword, userActions.add);
-router.post("/api/rent", verifyToken, userActions.rentShip);
-router.get("/api/rent/:id", userActions.readRent);
-
-import verifyToken from "./middlewares/verifiyToken";
+/* ************************************************************************* */
+/* User routes */
+/* ************************************************************************* */
 
 router.get("/api/me", verifyToken, (req, res) => {
   res.json(req.user);
 });
-router.get("/api/auth", verifyToken, userActions.read);
 
-/*import stripeWebhook from "./modules/stripe/stripeWebhook";
+/* ************************************************************************* */
+/* Rent routes */
+/* ************************************************************************* */
+
+/* ************************************************************************* */
+/* Stripe webhook */
+/* ************************************************************************* */
+
 router.post(
   "/webhook",
   express.raw({ type: "application/json" }),
   stripeWebhook,
 );
-*/
+
+const userController = new UserController();
+const authController = new AuthController();
+
+// 🌟 Routes User
+router.get("/users", userController.browse.bind(userController));
+router.post("/users", userController.add.bind(userController));
+
+// 🌟 Routes Auth
+router.post("/auth/login", authController.login.bind(authController));
+router.post("/auth/logout", authController.logout.bind(authController));
+
+// Routes Ship
+const shipController = new ShipController();
+
+router.get("/ships", shipController.browse.bind(shipController));
+router.get("/ships/:id", shipController.read.bind(shipController));
+router.get(
+  "/ships/:id/availability",
+  shipController.checkAvailability.bind(shipController),
+);
+router.post("/ships", shipController.add.bind(shipController));
+router.delete("/ships/:id", shipController.remove.bind(shipController));
+
+/* RENT */
+const rentController = new RentController();
+router.post("/rents", verifyToken, rentController.add.bind(rentController));
+router.get("/rents", verifyToken, rentController.browse.bind(rentController));
+
 export default router;

@@ -2,52 +2,71 @@ import type { Request, Response } from "express";
 import Stripe from "stripe";
 import rentRepository from "../rent/rentRepository";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
+if (!process.env.STRIPE_SECRET_KEY) {
+  throw new Error("STRIPE_SECRET_KEY is not defined");
+}
+
+const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+
+if (!webhookSecret) {
+  throw new Error("STRIPE_WEBHOOK_SECRET is not defined");
+}
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
   apiVersion: "2025-08-27.basil",
 });
 
 const stripeWebhook = async (req: Request, res: Response): Promise<void> => {
-  const sig = req.headers["stripe-signature"] as string;
-  console.log("WEB HOOK FROM STRIPE !");
+  const signature = req.headers["stripe-signature"];
+
+  if (!signature) {
+    console.error("Missing stripe-signature header");
+    res.status(400).send("Missing Stripe signature");
+    return;
+  }
+
   let event: Stripe.Event;
 
   try {
-    event = stripe.webhooks.constructEvent(
-      req.body,
-      sig,
-      process.env.STRIPE_WEBHOOK_SECRET as string,
-    );
+    event = stripe.webhooks.constructEvent(req.body, signature, webhookSecret);
+
+    console.info(`Stripe webhook received: ${event.type}`);
   } catch (err) {
-    console.error("Erreur de vérification du webhook :", err);
+    console.error("Stripe webhook verification failed:", err);
     res.status(400).send(`Webhook Error: ${(err as Error).message}`);
     return;
   }
 
+  // --------------------
+  // Payment completed
+  // --------------------
   if (event.type === "checkout.session.completed") {
     const session = event.data.object as Stripe.Checkout.Session;
+
     const shipId = session.metadata?.shipId;
     const userId = session.metadata?.userId;
 
     if (!shipId || !userId) {
-      console.log(session.metadata, "[SESSION] META DATA ");
-      console.warn(
-        "Pas d'ID de vaisseau ou d'utilisateur trouvé dans metadata.",
-      );
-      res.status(400).send("Missing ship or User ID.");
+      console.warn("Missing shipId or userId in Stripe metadata");
+      res.status(400).send("Missing metadata");
       return;
     }
 
     try {
       await rentRepository.create(userId, shipId);
-      console.info("Paiement validé et base de donnée mise à jours !");
+
+      console.info(
+        `Payment validated -> rent created: user ${userId} ship ${shipId}`,
+      );
     } catch (err) {
-      console.error("Erreur lors de la mise à jour du vaisseau :", err);
-      res.status(500).send("Internal server error");
+      console.error("Database update after payment failed:", err);
+      res.status(500).send("Database error");
       return;
     }
   } else {
-    console.log(`Unhandled event type ${event.type}`);
+    console.info(`Unhandled Stripe event type: ${event.type}`);
   }
+
   res.status(200).json({ received: true });
 };
 

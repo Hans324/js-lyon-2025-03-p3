@@ -601,3 +601,52 @@ Nous accueillons avec plaisir les contributions ! Veuillez suivre ces étapes po
 - Assurez-vous que votre code respecte les standards de codage en exécutant `npm run check` avant de pousser vos modifications.
 - Ajoutez des tests pour toute nouvelle fonctionnalité ou correction de bug.
 - Documentez clairement vos modifications dans la description de la pull request.
+
+## Déploiement du serveur Node.js
+
+### Objectif
+Ce script permet de déployer automatiquement le serveur Node.js et le back-end de l’application.  
+Il effectue les étapes suivantes :
+- Mise à jour du code depuis GitHub
+- Installation des dépendances
+- Migration de la base de données
+- Build de l’application
+- Redémarrage du serveur Node.js
+
+### Prérequis
+- Node.js (v22+) et npm installés
+- Accès au dépôt GitHub (SSH configuré)
+- Fichier `.env` correctement configuré
+- Base de données accessible (EXTERNALSHIP pour ce projet)
+
+### Commande pour exécuter le script
+```bash
+./deploy.sh
+
+### Étapes effectuées par le script
+1. **Mise à jour du code** : `git pull origin main`  
+2. **Installation des dépendances** : `npm install`  
+3. **Migration de la base de données** : `tsx ./bin/migrate`  
+4. **Build de l’application** : `npm run build`  
+5. **Redémarrage du serveur** : `npm run dev:server &`
+
+> Après l’exécution, le serveur écoute sur le port **3310**.
+
+## Justification technique du script de déploiement
+
+### Pourquoi automatiser ?
+- Gagner du temps et éviter les erreurs manuelles
+- Standardiser le processus de déploiement pour tous les membres de l’équipe
+
+### Pourquoi cet ordre ?
+1. **Code** : récupérer d’abord la dernière version depuis GitHub  
+2. **Dépendances** : installer les librairies nécessaires avant d’exécuter le code  
+3. **Base de données** : migration avant le build pour que le code fonctionne correctement  
+4. **Build** : préparer les fichiers optimisés pour le serveur  
+5. **Redémarrage** : relancer le serveur pour appliquer tous les changements
+
+### Pourquoi utiliser un script ?
+- Centralisation de toutes les étapes dans un seul fichier  
+- Reproductibilité du déploiement  
+- Réduction des risques d’erreurs manuelles  
+- Facilité de maintenance pour les futures mises à jour

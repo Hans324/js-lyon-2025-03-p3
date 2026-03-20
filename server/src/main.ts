@@ -2,21 +2,19 @@
 import "dotenv/config";
 
 // Check database connection
-// Note: This is optional and can be removed if the database connection
-// is not required when starting the application
 import "../database/checkConnection";
 
-// Import the Express application from ./app
+// Import the Express application
 import app from "./app";
 
-// Get the port from the environment variables
-const port = process.env.APP_PORT;
+// Get port from environment variables with fallback
+const port = Number(process.env.APP_PORT) || 3000;
 
-// Start the server and listen on the specified port
+// Start the server
 app
   .listen(port, () => {
     console.info(`Server is listening on port ${port}`);
   })
   .on("error", (err: Error) => {
-    console.error("Error:", err.message);
+    console.error("Server error:", err.message);
   });

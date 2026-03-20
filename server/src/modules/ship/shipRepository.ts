@@ -1,5 +1,5 @@
+import type { PoolConnection } from "mysql2/promise";
 import databaseClient from "../../../database/client";
-
 import type { Result, Rows } from "../../../database/client";
 
 type Ship = {
@@ -11,88 +11,149 @@ type Ship = {
 };
 
 class ShipRepository {
-  // The C of CRUD - Create operation
-
+  // --------------------
+  // Create ship
+  // --------------------
   async create(ship: Omit<Ship, "id">) {
-    // Execute the SQL INSERT query to add a new ship to the "ship" table
-    const [result] = await databaseClient.query<Result>(
-      "insert into ship (name, image, catchphrase, quantity) values (?, ?, ?, ?)",
-      [ship.name, ship.image, ship.catchphrase, ship.quantity],
-    );
+    try {
+      const [result] = await databaseClient.query<Result>(
+        "insert into ship (name, image, catchphrase, quantity) values (?, ?, ?, ?)",
+        [ship.name, ship.image, ship.catchphrase, ship.quantity],
+      );
 
-    // Return the ID of the newly inserted ship
-    return result.insertId;
+      console.info(`Ship created with id ${result.insertId}`);
+
+      return result.insertId;
+    } catch (err) {
+      console.error("Error creating ship:", err);
+      throw err;
+    }
   }
 
-  // The Rs of CRUD - Read operations
-
+  // --------------------
+  // Read single ship
+  // --------------------
   async read(id: number) {
-    // Execute the SQL SELECT query to retrieve a specific ship by its ID
-    const [rows] = await databaseClient.query<Rows>(
-      "select * from ship where id = ?",
-      [id],
-    );
+    try {
+      const [rows] = await databaseClient.query<Rows>(
+        "select * from ship where id = ?",
+        [id],
+      );
 
-    // Return the first row of the result, which represents the ship
-    return rows[0] as Ship;
+      return rows[0] as Ship | undefined;
+    } catch (err) {
+      console.error(`Error reading ship ${id}:`, err);
+      throw err;
+    }
   }
 
+  // --------------------
+  // Read all ships
+  // --------------------
   async readAll() {
-    // Execute the SQL SELECT query to retrieve all ships from the "ship" table
-    const [rows] = await databaseClient.query<Rows>("select * from ship");
-    // Return the array of ships
-    return rows as Ship[];
+    try {
+      const [rows] = await databaseClient.query<Rows>("select * from ship");
+
+      console.info(`Fetched ${rows.length} ships`);
+
+      return rows as Ship[];
+    } catch (err) {
+      console.error("Error reading ships:", err);
+      throw err;
+    }
   }
 
+  // --------------------
+  // Delete ship
+  // --------------------
   async delete(id: number) {
-    // Execute the SQL DELETE query to remove a ship from the "ship" table
-    const [result] = await databaseClient.query<Result>(
-      "delete from ship where id = ?",
-      [id],
-    );
+    try {
+      const [result] = await databaseClient.query<Result>(
+        "delete from ship where id = ?",
+        [id],
+      );
 
-    // Return the ID of the newly inserted ship
-    return result.affectedRows;
+      console.info(`Ship deleted: ${id}`);
+
+      return result.affectedRows;
+    } catch (err) {
+      console.error(`Error deleting ship ${id}:`, err);
+      throw err;
+    }
   }
 
+  // --------------------
+  // Ship availability
+  // --------------------
   async shipAvailable(id: number) {
-    const [rows] = await databaseClient.query<Rows>(
-      `
-   select ship.id, ship.quantity - COUNT(ship_id) as ship_available, ship.name 
-from ship
-left join rent on ship_id = ship.id
-where ship.id = ?
-  `,
-      [id],
-    );
+    try {
+      const [rows] = await databaseClient.query<Rows>(
+        `
+        select ship.id, ship.quantity - COUNT(ship_id) as ship_available, ship.name
+        from ship
+        left join rent on ship_id = ship.id
+        where ship.id = ?
+        `,
+        [id],
+      );
 
-    return rows[0] as Ship;
+      return rows[0] as Ship | undefined;
+    } catch (err) {
+      console.error(`Error checking ship availability for ${id}:`, err);
+      throw err;
+    }
   }
 
+  // --------------------
+  // Mark ship booked
+  // --------------------
   async markAsBooked(id: number) {
-    const [result] = await databaseClient.query<Result>(
-      `
-    UPDATE ship SET quantity = quantity - 1 WHERE id = ? AND quantity > 0
-    `,
-      [id],
-    );
+    try {
+      const [result] = await databaseClient.query<Result>(
+        `
+        UPDATE ship SET quantity = quantity - 1 
+        WHERE id = ? AND quantity > 0
+        `,
+        [id],
+      );
 
-    return result.affectedRows;
+      console.info(`Ship booking attempted for id ${id}`);
+
+      return result.affectedRows;
+    } catch (err) {
+      console.error(`Error booking ship ${id}:`, err);
+      throw err;
+    }
   }
 
-  // The U of CRUD - Update operation
-  // TODO: Implement the update operation to modify an existing item
+  // --------------------
+  // Atomic booking (transaction safe)
+  // --------------------
+  async bookShipAtomically(shipId: number, connection: PoolConnection) {
+    try {
+      const [rows] = await connection.query<Rows>(
+        "SELECT quantity FROM ship WHERE id = ? FOR UPDATE",
+        [shipId],
+      );
 
-  // async update(item: Item) {
-  //   ...
-  // }
+      if (!rows[0] || rows[0].quantity <= 0) {
+        console.info(`Ship ${shipId} unavailable`);
+        return false;
+      }
 
-  // The D of CRUD - Delete operation
-  // TODO: Implement the delete operation to remove an item by its ID
+      await connection.query(
+        "UPDATE ship SET quantity = quantity - 1 WHERE id = ?",
+        [shipId],
+      );
 
-  // async delete(id: number) {
-  //   ...
-  // }
+      console.info(`Ship ${shipId} successfully booked`);
+
+      return true;
+    } catch (err) {
+      console.error(`Atomic booking failed for ship ${shipId}:`, err);
+      throw err;
+    }
+  }
 }
 
 export default new ShipRepository();

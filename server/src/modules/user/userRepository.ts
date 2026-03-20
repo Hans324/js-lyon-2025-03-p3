@@ -18,83 +18,126 @@ type Rent = {
 };
 
 class UserRepository {
-  // The C of CRUD - Create operation
-
+  // --------------------
+  // Create user
+  // --------------------
   async create(user: Omit<User, "id" | "is_admin">) {
-    // Execute the SQL INSERT query to add a new ship to the "ship" table
-    const [result] = await databaseClient.query<Result>(
-      "insert into user (email, firstname, lastname, hashed_password ) values (?, ?, ?, ?)",
-      [user.email, user.firstname, user.lastname, user.hashed_password],
-    );
-    // Return the ID of the newly inserted ship
-    return result.insertId;
+    try {
+      const [result] = await databaseClient.query<Result>(
+        "insert into user (email, firstname, lastname, hashed_password ) values (?, ?, ?, ?)",
+        [user.email, user.firstname, user.lastname, user.hashed_password],
+      );
+
+      console.info(`User created with id ${result.insertId}`);
+
+      return result.insertId;
+    } catch (err) {
+      console.error("Error creating user:", err);
+      throw err;
+    }
   }
 
+  // --------------------
+  // Create rent
+  // --------------------
   async createRent(shipId: number, userId: number) {
-    const [result] = await databaseClient.query<Result>(
-      "INSERT INTO rent(user_id, ship_id) VALUES (?, ?)",
-      [userId, shipId],
-    );
-    return result.insertId;
-  }
-  // The Rs of CRUD - Read operations
+    try {
+      const [result] = await databaseClient.query<Result>(
+        "INSERT INTO rent(user_id, ship_id) VALUES (?, ?)",
+        [userId, shipId],
+      );
 
+      console.info(`Rent created: user ${userId} -> ship ${shipId}`);
+
+      return result.insertId;
+    } catch (err) {
+      console.error("Error creating rent:", err);
+      throw err;
+    }
+  }
+
+  // --------------------
+  // Read user by id
+  // --------------------
   async read(id: number) {
-    // Execute the SQL SELECT query to retrieve a specific ship by its ID
-    const [rows] = await databaseClient.query<Rows>(
-      "select * from user where id = ?",
-      [id],
-    );
-    // Return the first row of the result, which represents the ship
-    return rows[0] as User;
+    try {
+      const [rows] = await databaseClient.query<Rows>(
+        "select * from user where id = ?",
+        [id],
+      );
+
+      return rows[0] as User | undefined;
+    } catch (err) {
+      console.error(`Error reading user ${id}:`, err);
+      throw err;
+    }
   }
 
+  // --------------------
+  // Read user by email
+  // --------------------
   async readByEmail(email: string) {
-    // Execute the SQL SELECT query to retrieve a specific user by its email
-    const [rows] = await databaseClient.query<Rows>(
-      "select * from user where email = ?",
-      [email],
-    );
-    // Return the first row of the result, which represents the user
-    return rows[0] as User;
+    try {
+      const [rows] = await databaseClient.query<Rows>(
+        "select * from user where email = ?",
+        [email],
+      );
+
+      return rows[0] as User | undefined;
+    } catch (err) {
+      console.error(`Error reading user by email ${email}:`, err);
+      throw err;
+    }
   }
 
+  // --------------------
+  // Read all users
+  // --------------------
   async readAll() {
-    // Execute the SQL SELECT query to retrieve all ships from the "ship" table
-    const [rows] = await databaseClient.query<Rows>("select * from user");
-    // Return the array of ships
-    return rows as User[];
+    try {
+      const [rows] = await databaseClient.query<Rows>("select * from user");
+
+      console.info(`Fetched ${rows.length} users`);
+
+      return rows as User[];
+    } catch (err) {
+      console.error("Error reading users:", err);
+      throw err;
+    }
   }
 
+  // --------------------
+  // Read all rents
+  // --------------------
   async readRent() {
-    // Execute the SQL SELECT query to retrieve all ships from the "ship" table
-    const [rows] = await databaseClient.query<Rows>("select * from rent");
-    // Return the array of ships
-    return rows as Rent[];
+    try {
+      const [rows] = await databaseClient.query<Rows>("select * from rent");
+
+      console.info(`Fetched ${rows.length} rents`);
+
+      return rows as Rent[];
+    } catch (err) {
+      console.error("Error reading rents:", err);
+      throw err;
+    }
   }
 
+  // --------------------
+  // Read rents for a ship
+  // --------------------
   async readRentSingle(shipId: number) {
-    // Execute the SQL SELECT query to retrieve all ships from the "ship" table
-    const [rows] = await databaseClient.query<Rows>(
-      "select * from rent where ship_id = ?",
-      [shipId],
-    );
-    // Return the array of ships
-    return rows as Rent[];
+    try {
+      const [rows] = await databaseClient.query<Rows>(
+        "select * from rent where ship_id = ?",
+        [shipId],
+      );
+
+      return rows as Rent[];
+    } catch (err) {
+      console.error(`Error reading rents for ship ${shipId}:`, err);
+      throw err;
+    }
   }
-  // The U of CRUD - Update operation
-  // TODO: Implement the update operation to modify an existing item
-
-  // async update(item: Item) {
-  //   ...
-  // }
-
-  // The D of CRUD - Delete operation
-  // TODO: Implement the delete operation to remove an item by its ID
-
-  // async delete(id: number) {
-  //   ...
-  // }
 }
 
 export default new UserRepository();
