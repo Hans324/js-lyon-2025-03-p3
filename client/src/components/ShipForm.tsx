@@ -1,65 +1,48 @@
 import "./ShipForm.css";
+import { useState } from "react";
 import { useNavigate } from "react-router";
+import { BASE_URL } from "../config";
 
 function ShipForm() {
-  const baseURL = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    //FormData => Browser API who will prepare our form datas (files or not) before sending it to the back.
+
     const form = new FormData(event.currentTarget);
 
-    await fetch(`${baseURL}/api/ships`, {
-      method: "POST",
-      body: form,
-      credentials: "include",
-    });
+    try {
+      const response = await fetch(`${BASE_URL}/api/ships`, {
+        method: "POST",
+        body: form,
+        credentials: "include",
+      });
 
-    navigate("/");
+      if (!response.ok) {
+        throw new Error("Erreur lors de la création");
+      }
+
+      navigate("/");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Erreur réseau inconnue");
+      }
+    }
   };
 
   return (
     <form className="ship-form" onSubmit={handleSubmit}>
-      <div className="label-wrapper">
-        <label htmlFor="input-shipName">Nom du vaisseau *</label>
-        <input
-          id="input-shipName"
-          placeholder="Nom du vaisseau"
-          type="text"
-          name="name"
-          required
-        />
-      </div>
-      <div className="label-wrapper">
-        <label htmlFor="input-catchphrase">Phrase d'accroche *</label>
-        <input
-          id="input-catchphrase"
-          placeholder="Votre slogan"
-          type="text"
-          name="catchphrase"
-          required
-        />
-      </div>
-      <div className="label-wrapper inputFile">
-        <label htmlFor="input-img">Envoyez votre image *</label>
-        <input id="input-img" type="file" name="image" required />
-      </div>
-      <div className="label-wrapper">
-        <label htmlFor="input-quantity">Quantité *</label>
-        <input
-          id="input-quantity"
-          placeholder="Quantité"
-          type="number"
-          min="1"
-          max="10"
-          name="quantity"
-          required
-        />
-      </div>
-      <button id="button-addShip" type="submit">
-        Créez votre offre
-      </button>
+      <input name="name" placeholder="Nom" required />
+      <input name="catchphrase" placeholder="Phrase" required />
+      <input type="file" name="image" required />
+      <input type="number" name="quantity" required />
+
+      <button type="submit">Créer</button>
+
+      {error && <p>{error}</p>}
     </form>
   );
 }

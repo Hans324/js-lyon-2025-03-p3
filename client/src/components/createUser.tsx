@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Link } from "react-router";
 import "../components/CreateUser.css";
+import { BASE_URL } from "../config.ts";
 
 function CreateUser() {
-  const baseURL = import.meta.env.VITE_API_URL;
+  const baseURL = BASE_URL;
 
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState<"success" | "error" | "">("");
@@ -86,7 +87,7 @@ function CreateUser() {
     <section className="section-register">
       <form onSubmit={handleSubmit} className="register-form">
         <div className="credentials-input">
-          <label htmlFor="email">Email</label>
+          <label htmlFor="input-email">Email</label>
           <input
             placeholder="Votre email"
             type="email"
@@ -97,7 +98,7 @@ function CreateUser() {
         </div>
 
         <div className="credentials-input">
-          <label htmlFor="firstname">Prénom</label>
+          <label htmlFor="input-firstname">Prénom</label>
           <input
             placeholder="Votre prénom"
             type="text"
@@ -109,7 +110,7 @@ function CreateUser() {
         </div>
 
         <div className="credentials-input">
-          <label htmlFor="lastname">Nom de famille</label>
+          <label htmlFor="input-lastname">Nom de famille</label>
           <input
             placeholder="Votre nom"
             type="text"
@@ -121,7 +122,7 @@ function CreateUser() {
         </div>
 
         <div className="credentials-input">
-          <label htmlFor="password">Mot de passe</label>
+          <label htmlFor="input-password">Mot de passe</label>
 
           <input
             placeholder="Votre mot de passe"

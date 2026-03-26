@@ -1,5 +1,7 @@
+// src/components/LoginForm.tsx
 import { useOutletContext } from "react-router";
 import "../components/LoginForm.css";
+import { BASE_URL } from "../config";
 
 type User = {
   id: number;
@@ -13,8 +15,6 @@ type Auth = {
 };
 
 function LoginForm() {
-  const baseURL = import.meta.env.VITE_API_URL;
-
   const { setAuth } = useOutletContext() as {
     auth: Auth | null;
     setAuth: (auth: Auth | null) => void;
@@ -29,25 +29,23 @@ function LoginForm() {
     };
 
     try {
-      const response = await fetch(`${baseURL}/api/login`, {
+      const response = await fetch(`${BASE_URL}/api/login`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify(formData),
       });
+
       if (response.ok) {
-        window.location.replace("/ships");
-      }
-      if (!response.ok) {
+        const data = await response.json();
+        setAuth(data); // ✅ Mettre auth avant la redirection
+        window.location.replace("/ships"); // ✅ Redirection après setAuth
+      } else {
         throw new Error("Identifiants invalides");
       }
-      const data = await response.json();
-      setAuth(data);
     } catch (err) {
       console.error(err);
-      alert("Erreur de connexion");
+      alert("Erreur de connexion"); // Optionnel : peut être remplacé par un message DOM
     }
   };
 
