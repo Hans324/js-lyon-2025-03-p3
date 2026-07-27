@@ -4,7 +4,9 @@ import { sanitizeUserInput } from "../utils/sanitize";
 
 export default class ShipService {
   async getAllShips() {
-    return await shipRepository.readAll();
+    const ships = await shipRepository.readAll();
+    console.log("All ships data:", ships); // log pour vérifier ce qui est renvoyé
+    return ships;
   }
 
   async getShipById(id: number) {

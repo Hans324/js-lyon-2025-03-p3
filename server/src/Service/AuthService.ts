@@ -6,11 +6,11 @@ import userRepository from "../modules/user/userRepository";
 
 export default class AuthService {
   async login(data: LoginInput) {
-    // 1️⃣ Lecture utilisateur
+    //  Lecture utilisateur
     const user = await userRepository.readByEmail(data.email);
     if (!user) throw new Error("Email ou mot de passe incorrect");
 
-    // 2️⃣ Vérification mot de passe
+    // 2 Vérification mot de passe
     const verified = await argon2.verify(user.hashed_password, data.password);
     if (!verified) throw new Error("Email ou mot de passe incorrect");
 
@@ -18,7 +18,7 @@ export default class AuthService {
 
     const { hashed_password, ...userWithoutHashedPassword } = user;
 
-    // 3️⃣ Création JWT
+    // 3️ Création JWT
     const payload: JwtPayload = {
       sub: user.id.toString(),
       isAdmin: user.is_admin,

@@ -80,7 +80,7 @@ const storage = multer.diskStorage({
 
 export const upload = multer({
   storage,
-  limits: { fileSize: 2 * 1024 * 1024 }, // 2MB
+  limits: { fileSize: 2 * 1024 * 1024 },
   fileFilter: (_req, file, callback) => {
     if (!file.mimetype.startsWith("image/")) {
       return callback(new Error("Seules les images sont autorisées"));
@@ -97,7 +97,6 @@ export const upload = multer({
 // --------------------
 const add: RequestHandler = async (req, res) => {
   try {
-    // ✅ Récupère le fichier s’il existe, sinon null
     const imageFile = req.file ? `/upload/${req.file.filename}` : "";
 
     // Crée l’objet du nouveau vaisseau

@@ -1,7 +1,7 @@
 import express from "express";
 
 import { validateCreateUser } from "./middlewares/validation";
-import verifyToken from "./middlewares/verifiyToken";
+import verifyToken from "./middlewares/verifyToken";
 
 import stripeWebhook from "./modules/stripe/stripeWebhook";
 
@@ -56,14 +56,19 @@ router.post("/auth/logout", authController.logout.bind(authController));
 // Routes Ship
 const shipController = new ShipController();
 
-router.get("/ships", shipController.browse.bind(shipController));
-router.get("/ships/:id", shipController.read.bind(shipController));
+router.get("/api/ships", shipController.browse.bind(shipController));
+router.get("/api/ships/:id", shipController.read.bind(shipController));
 router.get(
-  "/ships/:id/availability",
+  "/api/ships/:id/availability",
+
   shipController.checkAvailability.bind(shipController),
 );
-router.post("/ships", shipController.add.bind(shipController));
-router.delete("/ships/:id", shipController.remove.bind(shipController));
+router.post("/api/ships", verifyToken, shipController.add.bind(shipController));
+router.delete(
+  "/api/ships/:id",
+  verifyToken,
+  shipController.remove.bind(shipController),
+);
 
 /* RENT */
 const rentController = new RentController();

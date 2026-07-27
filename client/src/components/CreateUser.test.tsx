@@ -53,7 +53,6 @@ describe("CreateUser", () => {
       target: { value: "Password123!" },
     });
 
-    // ✅ IMPORTANT : cocher la case
     fireEvent.click(screen.getByLabelText(/J'accepte les CGU/i));
 
     fireEvent.click(screen.getByRole("button", { name: /Créer le compte/i }));
@@ -87,7 +86,6 @@ describe("CreateUser", () => {
       target: { value: "Password123!" },
     });
 
-    // ✅ IMPORTANT : cocher la case
     fireEvent.click(screen.getByLabelText(/J'accepte les CGU/i));
 
     fireEvent.click(screen.getByRole("button", { name: /Créer le compte/i }));

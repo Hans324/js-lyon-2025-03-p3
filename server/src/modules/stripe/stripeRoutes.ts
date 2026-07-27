@@ -1,6 +1,6 @@
 import express from "express";
 import Stripe from "stripe";
-import verifyToken from "../../middlewares/verifiyToken";
+import verifyToken from "../../middlewares/verifyToken";
 import shipRepository from "../ship/shipRepository";
 
 const router = express.Router();

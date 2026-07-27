@@ -27,8 +27,8 @@ export default class AuthController {
     res
       .clearCookie("auth_token", {
         httpOnly: true,
-        sameSite: "strict",
-        secure: true,
+        sameSite: "lax",
+        secure: process.env.NODE_ENV === "production",
       })
       .status(200)
       .json({ message: "Déconnexion réussie" });

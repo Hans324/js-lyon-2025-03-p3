@@ -5,7 +5,6 @@ export default class RentService {
   async createRent(data: RentInput) {
     const { userId, shipId } = data;
 
-    // ✅ logique métier ici
     if (!userId || !shipId) {
       throw new Error("userId ou shipId manquant");
     }

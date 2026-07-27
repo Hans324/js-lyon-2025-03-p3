@@ -650,3 +650,82 @@ Il effectue les étapes suivantes :
 - Reproductibilité du déploiement  
 - Réduction des risques d’erreurs manuelles  
 - Facilité de maintenance pour les futures mises à jour
+
+
+
+# Projet Hans
+
+## Prérequis
+
+- **Node.js** 18+ (20+ recommandé pour React Router 7)
+- **Docker** (pour MySQL) — ou un MySQL local déjà créé avec les mêmes variables que dans `.env`
+
+## Installation
+
+```bash
+npm install
+```
+
+Copier la config d’environnement :
+
+```bash
+cp env .env
+```
+
+Vérifier dans `.env` au minimum : `APP_PORT`, `APP_SECRET`, `DB_*`, `VITE_API_URL=` (vide en dev), `VITE_PROXY_TARGET=http://127.0.0.1:3310`, `CLIENT_URL=http://localhost:3000`.
+
+## Workflow (ordre des commandes)
+
+**En une phrase :** après `npm install` et `cp env .env`, enchaîner `npm run setup:upload` → `npm run docker:db` (attendre que MySQL soit prêt) → `npm run dev:all`, puis ouvrir http://localhost:3000/ .
+
+```mermaid
+flowchart TD
+  A["npm install"] --> B["cp env .env"]
+  B --> C["npm run setup:upload"]
+  C --> D["npm run docker:db"]
+  D --> E["npm run dev:all"]
+  E --> F["http://localhost:3000"]
+```
+
+## Lancer de bout en bout
+
+1. **Images des vaisseaux** (`/upload/ship1.webp`, etc.) :
+
+   ```bash
+   npm run setup:upload
+   ```
+
+2. **Base MySQL** (Docker) :
+
+   ```bash
+   npm run docker:db
+   ```
+
+   Attendre ~15–20 s. Si la base était vide ou cassée :  
+   `docker compose down -v && npm run docker:db`
+
+3. **Front + API** :
+
+   ```bash
+   npm run dev:all
+   ```
+
+## URLs
+
+| Service | URL |
+|--------|-----|
+| Site | http://localhost:3000/ |
+| API | http://localhost:3310/ (ex. `/api/ships`) |
+
+En dev, le front appelle `/api` et `/upload` via le **proxy Vite** : pas besoin de `VITE_API_URL` pointant vers 3310.
+
+## Commandes utiles
+
+| Commande | Rôle |
+|----------|------|
+| `npm run dev` | Front Vite seul |
+| `npm run dev:server` | API Express seule |
+| `npm run build` | Build production du client (`dist/`) |
+| `npm run check-types` | Types TypeScript (client) |
+| `npm run check-types:server` | Types serveur |
+| `npm test` | Tests Jest |

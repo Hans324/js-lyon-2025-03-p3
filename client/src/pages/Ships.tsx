@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { apiBaseUrl } from "../apiBaseUrl";
 import Filter from "../components/Filter";
 import ShipCard from "../components/ShipCard";
 import "./Ships.css";
@@ -10,12 +11,16 @@ interface ShipsProps {
 }
 function Ships() {
   const [ships, setShips] = useState<ShipsProps[]>([]);
-  const baseURL = import.meta.env.VITE_API_URL;
+  const baseURL = apiBaseUrl();
   useEffect(() => {
-    fetch(`${baseURL}/api/ships`)
-      .then((response) => response.json())
-      .then((data) => setShips(data));
-  }, []);
+    fetch(`${baseURL}/api/ships`, { credentials: "include" })
+      .then((response) => {
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return response.json();
+      })
+      .then((data) => setShips(Array.isArray(data) ? data : []))
+      .catch((err) => console.error("Erreur chargement vaisseaux:", err));
+  }, [baseURL]);
 
   return (
     <>
@@ -27,7 +32,7 @@ function Ships() {
         </p>
 
         <Filter />
-        <div className="shipCards-wrapper">
+        <div className="shipCards-wrapper" id="ships-catalog">
           {ships.map((ship) => (
             <ShipCard
               key={ship.id}

@@ -7,6 +7,7 @@ export default class ShipController {
   async browse(req: Request, res: Response) {
     try {
       const ships = await shipService.getAllShips();
+      console.log("All ships data: ", ships); // 👈 ajoute ça
       res.status(200).json(ships);
     } catch (err: unknown) {
       console.error(err);
