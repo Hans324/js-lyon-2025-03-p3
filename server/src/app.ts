@@ -1,15 +1,14 @@
+import fs from "node:fs";
+import path from "node:path";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import express from "express";
 import helmet from "helmet";
-import fs from "node:fs";
-import path from "node:path";
 
 import dotenv from "dotenv";
-import router from "./router";
 import stripeRoutes from "./modules/stripe/stripeRoutes";
 import stripeWebhook from "./modules/stripe/stripeWebhook";
-
+import router from "./router";
 dotenv.config();
 
 const app = express();

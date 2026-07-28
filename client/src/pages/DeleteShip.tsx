@@ -1,6 +1,7 @@
 import NotAuth from "../components/NotAuth";
 import "./DeleteShip.css";
 import { useEffect, useState } from "react";
+import { apiBaseUrl } from "../apiBaseUrl";
 
 interface ShipsProps {
   id: number;
@@ -10,12 +11,12 @@ interface ShipsProps {
 
 export default function DeleteShip() {
   const [ships, setShips] = useState<ShipsProps[]>([]);
-  const baseURL = import.meta.env.VITE_API_URL;
+  const baseURL = apiBaseUrl();
   useEffect(() => {
     fetch(`${baseURL}/api/ships`)
       .then((response) => response.json())
       .then((data) => setShips(data));
-  }, []);
+  }, [baseURL]);
 
   const deleteShipBtn = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -50,7 +51,7 @@ export default function DeleteShip() {
     };
 
     checkAuth();
-  }, []);
+  }, [baseURL]);
   if (isAuth === null) return <p>Chargement...</p>;
   return isAuth ? (
     <>

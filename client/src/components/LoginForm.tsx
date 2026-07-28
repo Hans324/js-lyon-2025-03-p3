@@ -1,6 +1,6 @@
 // src/components/LoginForm.tsx
 import { useOutletContext } from "react-router";
-import "../components/LoginForm.css";
+import "./LoginForm.css";
 import { BASE_URL } from "../config";
 
 type User = {
@@ -29,7 +29,7 @@ function LoginForm() {
     };
 
     try {
-      const response = await fetch(`${BASE_URL}/api/login`, {
+      const response = await fetch(`${BASE_URL}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -37,8 +37,11 @@ function LoginForm() {
       });
 
       if (response.ok) {
-        const data = await response.json();
-        setAuth(data); // ✅ Mettre auth avant la redirection
+        const data = (await response.json()) as {
+          user: User;
+          message?: string;
+        };
+        setAuth({ user: data.user, token: "" });
         window.location.replace("/ships"); // ✅ Redirection après setAuth
       } else {
         throw new Error("Identifiants invalides");

@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import ShipForm from "../components/ShipForm";
 import "./AddShip.css";
+import { apiBaseUrl } from "../apiBaseUrl";
 import NotAuth from "../components/NotAuth";
 
 function AddShip() {
   const [isAuth, setIsAuth] = useState(false);
-  const baseURL = import.meta.env.VITE_API_URL;
+  const baseURL = apiBaseUrl();
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -25,7 +26,7 @@ function AddShip() {
     };
 
     checkAuth();
-  }, []);
+  }, [baseURL]);
 
   return isAuth ? (
     <>

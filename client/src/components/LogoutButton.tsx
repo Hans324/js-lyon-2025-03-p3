@@ -1,4 +1,5 @@
 import { Link } from "react-router";
+import { apiBaseUrl } from "../apiBaseUrl";
 
 type Props = {
   onLogout: () => void;
@@ -6,7 +7,7 @@ type Props = {
 
 function LogoutButton({ onLogout }: Props) {
   const handleLogout = async () => {
-    await fetch("http://localhost:3310/api/logout", {
+    await fetch(`${apiBaseUrl()}/auth/logout`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

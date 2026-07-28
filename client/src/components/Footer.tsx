@@ -1,4 +1,3 @@
-import "./Footer.tsx";
 import "./Footer.css";
 import "../App.css";
 import bluesky from "../assets/images/logos/Bluesky.svg";

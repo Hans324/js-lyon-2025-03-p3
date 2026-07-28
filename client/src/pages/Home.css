@@ -8,6 +8,7 @@
   object-fit: cover;
   object-position: center;
   overflow-x: hidden;
+  display: block;
 }
 .ship-txt {
   display: flex;
@@ -16,8 +17,19 @@
   gap: 0.5rem;
   color: var(--text-color);
   position: absolute;
-  width: 100vw;
+  width: 100%;
+  left: 0;
+  right: 0;
   top: 100px;
+  z-index: 2;
+  text-align: center;
+  padding: 0 1rem;
+  pointer-events: none;
+}
+.ship-txt h2,
+.ship-txt p {
+  color: var(--text-color);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.85);
 }
 .ship-txt > h2 {
   font-size: 3rem;
@@ -34,10 +46,18 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100vw;
+  width: 100%;
+  left: 0;
+  right: 0;
   bottom: 70px;
   gap: 4rem;
   padding: 0 2rem 0 2rem;
+  z-index: 2;
+  flex-wrap: wrap;
+  pointer-events: auto;
+}
+.button-group button a {
+  pointer-events: auto;
 }
 
 .home-intro {

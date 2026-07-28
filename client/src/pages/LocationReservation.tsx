@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router";
 import ShipCard from "../components/ShipCard";
 import "./LocationReservation.css";
+import { apiBaseUrl } from "../apiBaseUrl";
 import CheckoutButton from "../components/CheckoutButton";
 import NotAuth from "../components/NotAuth";
 
@@ -13,16 +14,22 @@ interface ShipProps {
 export default function LocationReservation() {
   const params = useParams();
   const shipID = params.id;
-  useEffect(() => {
-    fetch(`${baseURL}/api/available/ship/${shipID}`)
-      .then((response) => response.json())
-      .then((data) => {
-        setAvailability(data.ship_available);
-      });
-  }, [shipID]);
+  const baseURL = apiBaseUrl();
   const [availability, setAvailability] = useState<number>(0);
   const [isAuth, setIsAuth] = useState(Boolean);
-  const baseURL = import.meta.env.VITE_API_URL;
+  const [ship, setShip] = useState<ShipProps | null>(null);
+
+  useEffect(() => {
+    if (!shipID) return;
+    fetch(`${baseURL}/api/ships/${shipID}/availability`, {
+      credentials: "include",
+    })
+      .then((response) => response.json())
+      .then((data: { ship_available?: number }) => {
+        setAvailability(Number(data.ship_available ?? 0));
+      })
+      .catch(() => setAvailability(0));
+  }, [shipID, baseURL]);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -42,16 +49,14 @@ export default function LocationReservation() {
     };
 
     checkAuth();
-  }, []);
-
-  const [ship, setShip] = useState<ShipProps | null>(null);
+  }, [baseURL]);
 
   useEffect(() => {
-    fetch(`${baseURL}/api/ships/${shipID}`)
+    if (!shipID) return;
+    fetch(`${baseURL}/api/ships/${shipID}`, { credentials: "include" })
       .then((response) => response.json())
       .then((data) => setShip(data));
-  }, [shipID]);
-  console.log(ship);
+  }, [shipID, baseURL]);
 
   if (!isAuth) return <NotAuth />;
   if (!ship) return <p aria-live="polite">Chargement des informations...</p>;

@@ -1,21 +1,13 @@
-// modif noam
-/**
- * Construit une URL complète vers un fichier servi par l’API (ex: /upload/...)
- * - évite les doubles slash
- * - laisse passer les URLs déjà complètes (http...)
- */
+/** Construit l’URL absolue d’un fichier uploadé renvoyé par l’API (ex. `/upload/ship1.webp`). */
 export function apiAssetUrl(
-  base: string | undefined,
-  path: string | null | undefined,
+  baseURL: string | undefined,
+  imagePath: string | null | undefined,
 ): string {
-  if (!path) return "";
-
-  if (path.startsWith("http://") || path.startsWith("https://")) {
-    return path;
+  if (!imagePath) return "";
+  if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
+    return imagePath;
   }
-
-  const b = (base ?? "").replace(/\/$/, "");
-  const p = path.startsWith("/") ? path : `/${path}`;
-
-  return `${b}${p}`;
+  const root = (baseURL ?? "").replace(/\/$/, "");
+  const path = imagePath.startsWith("/") ? imagePath : `/${imagePath}`;
+  return `${root}${path}`;
 }

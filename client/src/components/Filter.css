@@ -1,142 +1,234 @@
+/* Bloc filtre — grille 3 colonnes sur grand écran, centré */
 .filter-form {
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: column;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  align-items: start;
+  justify-items: stretch;
+  max-width: 1100px;
+  width: 100%;
+  margin: 2rem auto 3rem;
+  padding: 1.75rem 1.5rem 2rem;
   background-color: var(--box-bg-color);
-  border: var(--box-bg-border-color) 1px solid;
-  width: 95vw;
-  margin-block: 10rem 5rem;
-  margin-inline: auto;
+  border: 1px solid var(--box-bg-border-color);
+  border-radius: 12px;
+  box-sizing: border-box;
 }
 
-#group-ships {
+.filter-col {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  margin: 2rem 0;
+  gap: 1rem;
+  width: 100%;
+  min-width: 0;
+}
+
+.filter-col--left {
+  align-items: stretch;
+}
+
+.filter-col--center h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.35rem;
+  text-align: center;
+  width: 100%;
 }
 
 #ships {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  width: 150px;
-  height: fit-content;
   gap: 0.5rem;
-  margin: 0.5rem;
+  width: 100%;
 }
 
 .btn-ship {
-  width: 150px;
-  height: 30px;
-  display: flex;
+  min-width: 7.5rem;
+  height: 2rem;
+  padding: 0 1rem;
+  display: inline-flex;
   justify-content: center;
   align-items: center;
   border-radius: 25px;
   font-weight: bold;
-  transition: 0.3s ease-in-out;
-  &:hover {
-    background-color: var(--color-secondary);
-  }
-  &:active {
-    background-color: var(--color-secondary-hover);
-  }
+  border: 1px solid var(--box-bg-border-color);
+  background: var(--lightWhite);
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+  cursor: pointer;
 }
+
+.btn-ship:hover {
+  background-color: var(--color-secondary);
+  color: var(--text-color);
+  border-color: var(--color-secondary);
+}
+
+.btn-ship.is-active {
+  background-color: var(--color-secondary);
+  color: var(--text-color);
+  border-color: var(--color-secondary);
+}
+
+.withdrawal-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+  max-width: 20rem;
+  margin-inline: auto;
+}
+
 #withdrawalAndReturnText {
   font-size: 0.8rem;
   font-weight: bold;
 }
+
 #withdrawal-return {
   display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
-  justify-content: center;
-  align-items: end;
-  width: 200px;
-  margin: 2rem auto;
-}
-#select-withdrawal-return {
-  width: 150px;
-  height: 30px;
-  border-radius: 3px;
-  margin: 10px 10px 10px 0;
-}
-#btn-withdrawal-return {
-  width: fit-content;
-  height: 30px;
-  background-color: transparent;
-  font-size: 1rem;
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-#group-services {
-  display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: space-around;
-  margin: 0 auto 2rem auto;
+  align-items: stretch;
+  gap: 0.5rem;
+  width: 100%;
 }
+
+#select-withdrawal-return {
+  width: 100%;
+  max-width: 20rem;
+  height: 2rem;
+  border-radius: 6px;
+  padding: 0 0.5rem;
+  border: 1px solid var(--box-bg-border-color);
+}
+
+#btn-withdrawal-return {
+  align-self: flex-start;
+  padding: 0.35rem 0.75rem;
+  background-color: transparent;
+  font-size: 0.9rem;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  text-decoration: underline;
+  color: var(--color-primary);
+}
+
 #btn-group-services {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  align-items: center;
-  width: 150px;
-  gap: 1.5rem;
-  margin: 1rem 0;
+  gap: 0.75rem;
+  width: 100%;
 }
+
+.btn-service {
+  min-width: 5.5rem;
+  height: 2rem;
+  padding: 0 0.75rem;
+  border-radius: 6px;
+  font-weight: bold;
+  border: 1px solid var(--box-bg-border-color);
+  background: var(--lightWhite);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-service:hover {
+  background-color: var(--grayLight);
+}
+
+.btn-service.is-active {
+  background-color: var(--color-secondary);
+  color: var(--text-color);
+  border-color: var(--color-secondary);
+}
+
 #group-date {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  gap: 1.5rem;
-  margin: 2rem auto;
-  width: 200px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 1rem;
+  width: 100%;
+  max-width: 22rem;
+  margin-inline: auto;
 }
+
+@media screen and (min-width: 900px) {
+  #group-date {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    max-width: none;
+  }
+}
+
 #btn-group-date {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 1.5rem;
-}
-
-#btn-seeships {
-  background-color: var(--color-secondary);
-  transition: 0.3s ease-in-out;
-  &:active {
-    background-color: var(--color-secondary-hover);
-  }
+  gap: 0.75rem;
+  flex: 1 1 auto;
+  min-width: 12rem;
 }
 
 .label-date {
   display: flex;
   flex-direction: column;
+  gap: 0.35rem;
   font-size: 0.8rem;
   font-weight: bold;
+  text-align: left;
+  width: 100%;
 }
 
-@media screen and (min-width: 1380px) {
+.label-date input[type="date"] {
+  padding: 0.35rem 0.5rem;
+  border-radius: 6px;
+  border: 1px solid var(--box-bg-border-color);
+}
+
+#btn-seeships {
+  flex: 0 0 auto;
+  align-self: center;
+  padding: 0.65rem 1.25rem;
+  min-height: 2.75rem;
+  background-color: var(--color-secondary);
+  color: var(--text-color);
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  white-space: nowrap;
+}
+
+#btn-seeships:hover {
+  background-color: var(--color-secondary-hover);
+}
+
+#btn-seeships:active {
+  background-color: var(--color-secondary-active);
+}
+
+@media screen and (min-width: 900px) {
   .filter-form {
-    flex-direction: row;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1.5rem 2rem;
+    align-items: start;
   }
 
-  #ships {
-    width: 490px;
-  }
-  #withdrawal-return {
-    width: 380px;
-  }
-
-  #btn-group-services {
-    width: 498px;
+  .filter-col--center h2 {
+    text-align: center;
   }
 
   #group-date {
     flex-wrap: nowrap;
-    width: 300px;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  #btn-seeships {
+    align-self: center;
   }
 }

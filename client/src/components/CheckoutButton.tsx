@@ -1,11 +1,12 @@
 import "./CheckoutButton.css";
+import { apiBaseUrl } from "../apiBaseUrl";
 
 type CheckoutButtonProps = {
   shipId: number;
 };
 
 function CheckoutButton({ shipId }: CheckoutButtonProps) {
-  const baseURL = import.meta.env.VITE_API_URL;
+  const baseURL = apiBaseUrl();
   const handleClick = async () => {
     const res = await fetch(`${baseURL}/api/create-checkout-session`, {
       method: "POST",

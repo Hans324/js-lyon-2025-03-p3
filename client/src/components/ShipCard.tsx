@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router";
 import BtnBooked from "../UI/UX/btnBooked";
 import BtnMoreInformations from "../UI/UX/btnMoreInformations";
+import { apiAssetUrl } from "../apiAssetUrl";
+import { apiBaseUrl } from "../apiBaseUrl";
 import tucanaYellow from "../assets/images/iconCard/Tucana_Yellow.webp";
 import battery from "../assets/images/iconCard/battery.svg";
 import capacity from "../assets/images/iconCard/capacity.svg";
@@ -16,18 +18,22 @@ interface ShipProps {
   id: number;
 }
 function ShipCard({ name, image, id }: ShipProps) {
-  const [availability, setAvailability] = useState<number>(0);
+  const [availability, setAvailability] = useState<number | null>(null);
   const location = useLocation();
-  const baseURL = import.meta.env.VITE_API_URL;
+  const baseURL = apiBaseUrl();
   useEffect(() => {
-    fetch(`${baseURL}/api/available/ship/${id}`)
-      .then((response) => response.json())
-      .then((data) => {
-        setAvailability(data.ship_available);
-      });
-  }, [id]);
-  console.info(location.pathname);
-  return availability > 0 ? (
+    fetch(`${baseURL}/api/ships/${id}/availability`, { credentials: "include" })
+      .then((response) => {
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return response.json();
+      })
+      .then((data: { ship_available?: number }) => {
+        setAvailability(Number(data.ship_available ?? 0));
+      })
+      .catch(() => setAvailability(0));
+  }, [id, baseURL]);
+  const availabilityLabel = availability === null ? "…" : String(availability);
+  return (
     <figure className="ship-card">
       <section className="infos-top">
         <div className="logo-name-wrapper">
@@ -58,9 +64,11 @@ function ShipCard({ name, image, id }: ShipProps) {
           </div>
         </div>
       </section>
-      <img src={`${baseURL}${image}`} alt={name} loading="lazy" />
+      <img src={apiAssetUrl(baseURL, image)} alt={name} loading="lazy" />
       <div className="quantity-wrapper">
-        <p className="ship-quantity">Quantité disponible : {availability}</p>
+        <p className="ship-quantity">
+          Quantité disponible : {availabilityLabel}
+        </p>
       </div>
       <div className="btn-wrapper">
         {location.pathname === `/locationreservation/${id}` ? (
@@ -74,8 +82,6 @@ function ShipCard({ name, image, id }: ShipProps) {
         <p>5000 k€ / jours terra</p> <p> 40000 k€ / 8jours terra</p>
       </div>
     </figure>
-  ) : (
-    ""
   );
 }
 

@@ -1,12 +1,13 @@
 import "./Header.css";
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router";
+import { apiBaseUrl } from "../apiBaseUrl";
 import admin from "../assets/images/logos/admin.svg";
 import help from "../assets/images/logos/help.svg";
 import logoWhite from "../assets/images/logos/logoWhite.png";
 import logoWhiteMobile from "../assets/images/logos/logoWhiteMobile.png";
 import menu from "../assets/images/logos/menu.svg";
-import LogoutButton from "../components/LogoutButton";
+import LogoutButton from "./LogoutButton";
 
 function Header() {
   const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth <= 650);
@@ -25,27 +26,28 @@ function Header() {
   }, []);
 
   const [isAuth, setIsAuth] = useState(Boolean);
-  const baseURL = import.meta.env.VITE_API_URL;
+  const baseURL = apiBaseUrl();
 
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const res = await fetch(`${baseURL}/api/me`, {
-          credentials: "include", // send the cookie to the server to verify the credentials
+        const res = await fetch(`${baseURL}/api/auth/status`, {
+          credentials: "include",
         });
 
-        if (res.ok) {
-          setIsAuth(true);
-        } else {
+        if (!res.ok) {
           setIsAuth(false);
+          return;
         }
+        const data = (await res.json()) as { authenticated?: boolean };
+        setIsAuth(Boolean(data.authenticated));
       } catch (err) {
         setIsAuth(false);
       }
     };
 
     checkAuth();
-  }, []);
+  }, [baseURL]);
 
   return (
     <section className="header">

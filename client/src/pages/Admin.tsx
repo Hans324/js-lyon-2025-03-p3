@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { AdminDashboard } from "../components/AdminDashboard";
 import "./Admin.css";
+import { apiBaseUrl } from "../apiBaseUrl";
 
 interface User {
   email: string;
@@ -9,23 +10,45 @@ interface User {
   isAdmin: boolean;
 }
 function Admin() {
-  const [user, setUser] = useState<User | null>(null);
-  const baseURL = import.meta.env.VITE_API_URL;
+  const [user, setUser] = useState<User | null | undefined>(undefined);
+  const baseURL = apiBaseUrl();
 
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        fetch(`${baseURL}/api/auth`, {
-          credentials: "include", // send the cookie to the server to verify the credentials
-        })
-          .then((res) => res.json())
-          .then((data) => setUser(data.user));
-      } catch (err) {}
+        const res = await fetch(`${baseURL}/api/me`, {
+          credentials: "include",
+        });
+        if (!res.ok) {
+          setUser(null);
+          return;
+        }
+        const data = (await res.json()) as {
+          email?: string;
+          firstname?: string;
+          lastname?: string;
+          is_admin?: boolean;
+        };
+        setUser({
+          email: data.email ?? "",
+          firstname: data.firstname ?? "",
+          lastname: data.lastname ?? "",
+          isAdmin: Boolean(data.is_admin),
+        });
+      } catch {
+        setUser(null);
+      }
     };
 
     checkAuth();
-  }, []);
-  console.info("isAdmin ?", user?.email);
+  }, [baseURL]);
+  if (user === undefined) {
+    return (
+      <section className="admin-page">
+        <p>Chargement…</p>
+      </section>
+    );
+  }
   return user?.isAdmin ? (
     <section className="admin-page">
       <div className="admin-page-infos">

@@ -1,47 +1,31 @@
+/* Polices : repli sur les polices système si les fichiers .otf ne sont pas fournis */
 @font-face {
-  font-family: "Mona Sans Black";
-  src: local("Mona Sans"), url("../src/fonts/monasans/MonaSans-Black.otf")
-    format("opentype");
+  font-family: "Mona Sans Regular";
+  src: local("Mona Sans"), local("Segoe UI"), local("Roboto"),
+    local("sans-serif");
+  font-weight: 400;
+  font-display: swap;
 }
 
 @font-face {
   font-family: "Mona Sans Bold";
-  src: local("Mona Sans"), url("../src/fonts/monasans/MonaSans-Bold.otf")
-    format("opentype");
-}
-@font-face {
-  font-family: "Mona Sans ExtraBold";
-  src: local("Mona Sans"), url("../src/fonts/monasans/MonaSans-ExtraBold.otf")
-    format("opentype");
-}
-
-@font-face {
-  font-family: "Mona Sans Light";
-  src: local("Mona Sans"), url("../src/fonts/monasans/MonaSans-Light.otf")
-    format("opentype");
-}
-
-@font-face {
-  font-family: "Mona Sans Medium";
-  src: local("Mona Sans"), url("../src/fonts/monasans/MonaSans-Medium.otf")
-    format("opentype");
-}
-@font-face {
-  font-family: "Mona Sans Regular";
-  src: local("Mona Sans"), url("../src/fonts/monasans/MonaSans-Regular.otf")
-    format("opentype");
+  src: local("Mona Sans"), local("Segoe UI Semibold"), local("sans-serif");
+  font-weight: 700;
+  font-display: swap;
 }
 
 @font-face {
   font-family: "Mona Sans SemiBold";
-  src: local("Mona Sans"), url("../src/fonts/monasans/MonaSans-SemiBold.otf")
-    format("opentype");
+  src: local("Mona Sans"), local("Segoe UI Semibold"), local("sans-serif");
+  font-weight: 600;
+  font-display: swap;
 }
 
 @font-face {
   font-family: "Supreme Spike";
-  src: local("Supreme Spike"), url("./fonts/supremespike/SupremeSpike.otf")
-    format("opentype");
+  src: local("Supreme Spike"), local("Impact"), local("Segoe UI"),
+    local("sans-serif");
+  font-display: swap;
 }
 
 :root {
