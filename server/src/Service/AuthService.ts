@@ -1,12 +1,11 @@
 import argon2 from "argon2";
 import jwt from "jsonwebtoken";
-import type { JwtPayload } from "jsonwebtoken";
 import type { LoginInput } from "../Entity/LoginInput";
 import userRepository from "../modules/user/userRepository";
 
 export default class AuthService {
   async login(data: LoginInput) {
-    //  Lecture utilisateur
+    // 1 Lecture utilisateur
     const user = await userRepository.readByEmail(data.email);
     if (!user) throw new Error("Email ou mot de passe incorrect");
 
@@ -19,7 +18,7 @@ export default class AuthService {
     const { hashed_password, ...userWithoutHashedPassword } = user;
 
     // 3️ Création JWT
-    const payload: JwtPayload = {
+    const payload = {
       sub: user.id.toString(),
       isAdmin: user.is_admin,
     };

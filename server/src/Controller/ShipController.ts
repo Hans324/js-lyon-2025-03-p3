@@ -11,7 +11,16 @@ export default class ShipController {
       res.status(200).json(ships);
     } catch (err: unknown) {
       console.error(err);
-      const message = err instanceof Error ? err.message : "Erreur serveur";
+      const errno =
+        err && typeof err === "object" && "code" in err
+          ? String((err as NodeJS.ErrnoException).code)
+          : "";
+      const message =
+        errno === "ECONNREFUSED" || errno === "ENOTFOUND"
+          ? "Base de données inaccessible. Démarre MySQL ou lance : docker compose up -d"
+          : err instanceof Error
+            ? err.message
+            : "Erreur serveur";
       res.status(500).json({ message });
     }
   }
