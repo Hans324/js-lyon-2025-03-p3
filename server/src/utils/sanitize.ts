@@ -1,8 +1,4 @@
-import sanitizeHtml from "sanitize-html";
-
-export const sanitizeUserInput = (input: string) => {
-  return sanitizeHtml(input, {
-    allowedTags: [],
-    allowedAttributes: {},
-  });
-};
+/** Nettoie une chaîne issue d’un formulaire (évite espaces parasites). */
+export function sanitizeUserInput(value: string): string {
+  return value.trim();
+}

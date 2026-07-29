@@ -1,10 +1,7 @@
-// Load environment variables from .env file
 import "dotenv/config";
 
-// Check database connection
-import "../database/checkConnection";
+import "./checkConnection";
 
-// Import the Express application
 import app from "./app";
 
 // Get port from environment variables with fallback
